@@ -1,0 +1,70 @@
+<!-- 14382ebeefb748f4b1615a3d1e22b9d7 -->
+
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Api Assignment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <P>Enter A Keyword</P>
+    <input type="form" id="keyword">
+    <p>Enter a start date (YYYYMMDD):</p>
+    <input type="form" id="startDate">
+    <p>Enter an end date (YYYYMMDD):</p>
+    <input type="form" id="endDate">
+    <p>How Many Records do you want?</p>
+    <input type="form" id="count">
+    <button id="goSearch">Search</button>
+    <div id='resultLocation'></div>
+</body>
+<script type ="text/javascript">
+
+
+$("#goSearch").on('click',function(){
+    $("#resultLocation").empty();
+        var num = $("#count").val();
+        var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+        url += '?' + $.param({
+        'api-key': "ec1d48b25b5d42b09e29769ddeef1adb",
+        'q': $("#keyword").val(),
+        'begin_date': $("#startDate").val(),
+        'end_date': $("#endDate").val()
+        });
+        console.log(url);
+            $.ajax({
+             url: url,
+            method: 'GET',
+        }).done(function(response)
+         {
+                console.log(response);
+                for(i = 0; i < num ;i++)
+                {
+                    var articleDiv = $("<div>")
+                    var headline = $("<h1>");
+                    headline.text(response.response.docs[i].headline.main);
+                    var p = $("<p>");
+                    p.text(response.response.docs[i].snippet);
+                    var pubDate = $("<p>");
+                    pubDate.text("Publication Date: " + response.response.docs[i].pub_date);  
+                    var link = $("<a>");
+                        link.attr('href', response.response.docs[i].web_url);
+                        link.text("Link");
+                    
+                    articleDiv.append(headline);  
+                    articleDiv.append(p);
+                    articleDiv.append(pubDate);
+                    articleDiv.append(link);
+                    $("#resultLocation").append(articleDiv);
+                }
+                
+         })
+});
+
+
+
+</script>
+</html>
